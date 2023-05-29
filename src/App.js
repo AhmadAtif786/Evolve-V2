@@ -5,7 +5,9 @@ import { Container, Row, Col } from "react-bootstrap";
 import discord from "./images/discord.png";
 import Foot from "./component/Foot";
 import ani from "./images/bg animation.gif";
+import { useState } from "react";
 function App() {
+  const [usdt, setUSDT] = useState(100);
   return (
     <>
       <div id="wb_Image8" className="img">
@@ -32,7 +34,10 @@ function App() {
               type="number"
               id="Editbox1"
               name="Deposit Box"
-              value="100"
+              value={usdt}
+              onChange={(e) => {
+                setUSDT(e.target.value);
+              }}
               autocomplete="off"
               spellcheck="false"
             ></input>
@@ -157,9 +162,6 @@ function App() {
           </div>
         </div>
       </div>
-      {/* </Col>
-        </Row>
-      </Container> */}
       <Foot />
     </>
   );
