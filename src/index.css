@@ -34,6 +34,7 @@ code {
   font-family: Lastica;
   font-size: 12px;
   letter-spacing: 2.07px;
+  cursor: pointer;
 }
 .bg {
   background-color: rgba(8, 5, 25, 0.8);

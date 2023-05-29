@@ -5,15 +5,39 @@ import { Container, Row, Col } from "react-bootstrap";
 import discord from "./images/discord.png";
 import Foot from "./component/Foot";
 import ani from "./images/bg animation.gif";
+import detectEthereumProvider from '@metamask/detect-provider';
+import Web3 from 'web3';
+// Import the contract ABI
+import contractABI from './contractABI.json';
 import { useState } from "react";
 function App() {
   const [usdt, setUSDT] = useState(100);
+  const [contractInstance, setContractInstance] = useState(null);
+
+  async function handleDepositAmount() {
+    try {
+      if (!contractInstance) {
+        console.error('Contract instance not initialized');
+        return;
+      }
+  
+      const amountInWei = Web3.utils.toWei(usdt.toString(), 'ether');
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const fromAddress = accounts[0];
+  
+      await contractInstance.methods.Deposit(amountInWei).send({ from: fromAddress, value: amountInWei });
+      alert('Deposit successful!');
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+  }
   return (
     <>
       <div id="wb_Image8" className="img">
         <img src={ani} className="Image8" alt="" width="641" height="728" />
       </div>
-      <Navbartop />
+      <Navbartop setContractInstance={setContractInstance} contractInstance={contractInstance} />
       <div className="bg py-4 w-50  d-flex m-auto mt-3">
         <span className="welcome text-center justify-content-center d-flex m-auto">
           Good Morning
@@ -45,7 +69,7 @@ function App() {
               <strong>USDT</strong>
             </span>
           </div>
-          <button className="btn btnupdates d-flex justify-content-center m-auto mt-3">
+          <button className="btn btnupdates d-flex justify-content-center m-auto mt-3" onClick={handleDepositAmount}>
             DEPOSIT
           </button>
           <div className="d-flex justify-content-between align-items-center p-1">
