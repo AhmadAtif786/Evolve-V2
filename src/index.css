@@ -1,13 +1,167 @@
+@font-face {
+  font-family: "Lastica";
+  font-display: swap;
+  src: url("./fonts/Lastica.woff2") format("woff2"),
+    url("./fonts/Lastica.woff") format("woff"),
+    url("./fonts/Lastica.ttf") format("truetype"),
+    url("./fonts/Lastica.svg#Lastica") format("svg"),
+    url("./fonts/Lastica.eot") format("embedded-opentype");
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #291750 !important;
+  /* background-image: url("./images/bg\ animation.gif");
+  background-image: rotate(90deg);
+  transform-origin: 50% 50%; */
+  color: #000000;
+  font-family: Lastica;
+  font-weight: normal;
+  font-size: 19px;
+  line-height: 1.1875;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+.connectbutton {
+  color: #d73cbe;
+  font-family: Lastica;
+  font-size: 12px;
+  letter-spacing: 2.07px;
+}
+.bg {
+  background-color: rgba(8, 5, 25, 0.8);
+  border-radius: 20px;
+}
+.welcome {
+  color: #ffffff;
+  font-family: Lastica;
+  font-size: 21px;
+  letter-spacing: 2.07px;
+}
+.firstblockshead {
+  color: #ffffff;
+  font-family: Lastica;
+  font-size: 19px;
+  letter-spacing: 2.07px;
+}
+.input {
+  position: absolute;
+  left: 305px;
+  top: 321px;
+  width: 40% !important;
+  height: 20px;
+  z-index: 12;
+}
+#Editbox1 {
+  border: 1px solid white;
+  width: 80%;
+  border-radius: 4px;
+  background-color: transparent;
+  background-image: none;
+  color: #d73cbe;
+  font-family: Lastica;
+  font-weight: bold;
+  font-style: normal;
+  font-size: 19px;
+  line-height: 20px;
+  display: flex;
+  margin: auto;
+  text-align: center;
+  justify-content: center;
+  margin: 0;
+  text-align: center;
+  padding: 4px 4px 4px 4px;
+}
+.usdt {
+  color: #ffffff;
+  font-family: Lastica;
+  font-size: 12px;
+  letter-spacing: 2.07px;
+}
+.usdtClaim {
+  color: #ffffff;
+  font-family: Lastica;
+  font-size: 9.3px;
+  letter-spacing: 2.07px;
+  text-align: center;
+}
+.btnupdates {
+  background-color: #d73cbe !important;
+  border: 1px solid black !important;
+  font-size: 14px !important;
+  border-radius: 10px !important;
+  font-weight: bold !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+.foot {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+.img {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  left: 20%;
+  width: 564px;
+  height: 641px;
+  z-index: -99;
+}
+.Image8 {
+  border: 0px solid #000000;
+  border-radius: 0px;
+  padding: 0;
+  transform: rotate(90deg);
+  transform-origin: 50% 50%;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.widthbox {
+  width: 40%;
+}
+.boxadjust {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+@media screen and (max-width: 960px) {
+  .boxadjust {
+    display: block !important;
+    justify-content: space-evenly;
+  }
+  .img {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    left: 20%;
+    width: 204px;
+    height: 241px;
+    z-index: -99;
+  }
+  .widthbox {
+    width: 100%;
+  }
+  .foot {
+    position: unset !important;
+    bottom: 0px;
+    width: 100%;
+    margin-top: 20px !important;
+  }
+  .adjust {
+    margin-top: 25px;
+  }
 }
