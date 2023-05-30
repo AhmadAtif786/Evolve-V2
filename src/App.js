@@ -14,6 +14,7 @@ import tokenABI from './tokenABI.json';
 import { useState, useEffect } from "react";
 function App() {
   const [usdt, setUSDT] = useState(100);
+  const [isApproved,setIsApproved]=useState(false);
   const [contractInstance, setContractInstance] = useState(null);
   const [totalAmountDeposited, setTotalAmountDeposited] = useState('');
   const [totalClaimed, setTotalClaimed] = useState('');
@@ -73,19 +74,34 @@ function App() {
         alert('Please connect wallet');
         return;
       }
-      const web3 = new Web3(window.ethereum);
+      
 
       const amountInWei = Web3.utils.toWei(usdt.toString(), 'ether');
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const fromAddress = accounts[0];
 
-      const tokenContractAddress = '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; // Replace with the actual token contract address
-      const tokenContract = new web3.eth.Contract(tokenABI, tokenContractAddress);
-      await tokenContract.methods.approve(contractInstance.options.address, amountInWei).send({ from: fromAddress });
-  
-
       await contractInstance.methods.Deposit(amountInWei).send({ from: fromAddress});
       alert('Deposit successful!');
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+  async function handleApprove() {
+    try {
+      if (!contractInstance) {
+        alert('Please connect wallet');
+        return;
+      }
+      const web3 = new Web3(window.ethereum);
+
+      const tokenContractAddress = '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; // Replace with the actual token contract address
+      const tokenContract = new web3.eth.Contract(tokenABI, tokenContractAddress);
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const fromAddress = accounts[0];
+      const amountInWei = Web3.utils.toWei(usdt.toString(), 'ether');
+      await tokenContract.methods.approve(contractInstance.options.address, amountInWei).send({ from: fromAddress });
+      alert('Approval successful!');
+      setIsApproved(true);
     } catch (error) {
       alert(error.message);
     }
@@ -218,8 +234,8 @@ function App() {
               <strong>USDT</strong>
             </span>
           </div>
-          <button className="btn btnupdates d-flex justify-content-center m-auto mt-3" onClick={handleDepositAmount}>
-            DEPOSIT
+          <button className="btn btnupdates d-flex justify-content-center m-auto mt-3" onClick={isApproved ?handleDepositAmount:handleApprove}>
+           {isApproved ? ' DEPOSIT':'Approve'}
           </button>
           <div className="d-flex justify-content-between align-items-center p-1">
             <span className="usdt">
