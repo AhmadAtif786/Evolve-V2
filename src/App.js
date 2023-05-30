@@ -19,7 +19,7 @@ function App() {
   const [totalDeposited, setTotalDeposited] = useState(0);
   const [totalClaimed, setTotalClaimed] = useState(0);
   const [pendingRewards, setPendingRewards] = useState(0);
-  const [nextClaimTime, setNextClaimTime] = useState('');
+  const [nextClaimTime, setNextClaimTime] = useState("");
   const [account, setAccount] = useState("");
   const [lastFourDigits, setLastFourDigits] = useState("");
   function Greeting() {
@@ -50,33 +50,33 @@ function App() {
         const selectedAddress = window.ethereum.selectedAddress;
         const web3 = new Web3(window.ethereum);
         const userTotalClaimWei = await contractInstance.methods
-        .Players(selectedAddress)
-        .call({ from: selectedAddress });
- console.log(userTotalClaimWei.user_total_claimed);
+          .Players(selectedAddress)
+          .call({ from: selectedAddress });
+        console.log(userTotalClaimWei.user_total_claimed);
         // Your code to interact with the contract using the selectedAddress
-        const totalClaimedWei = userTotalClaimWei.user_total_claimed
+        const totalClaimedWei = userTotalClaimWei.user_total_claimed;
         const pendingRewardsWei = await contractInstance.methods
           .CalculateClaimable(selectedAddress)
           .call();
         const nextClaimTimeEpoch = await contractInstance.methods
           .NextClaimTime(selectedAddress)
           .call();
-        const totalAmountDepositedWei = userTotalClaimWei.user_total_invested
+        const totalAmountDepositedWei = userTotalClaimWei.user_total_invested;
 
         // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
         const formattedTotalAmountDeposited = web3.utils.fromWei(
           totalAmountDepositedWei,
-          'ether'
+          "ether"
         );
         const formattedTotalClaimed = web3.utils.fromWei(
           totalClaimedWei,
-          'ether'
+          "ether"
         );
 
         // Convert Wei to normal with 4 decimals for pendingRewards
         const formattedPendingRewards = web3.utils.fromWei(
           pendingRewardsWei,
-          'ether'
+          "ether"
         );
         const formattedPendingRewardsWithDecimals = parseFloat(
           formattedPendingRewards
@@ -90,17 +90,17 @@ function App() {
         const minutes = Math.floor((countdown % (60 * 60)) / 60);
 
         setTotalDeposited(formattedTotalAmountDeposited);
-        console.log(formattedTotalAmountDeposited,"datas");
+        console.log(formattedTotalAmountDeposited, "datas");
         setTotalClaimed(formattedTotalClaimed);
         setPendingRewards(formattedPendingRewardsWithDecimals);
         console.log(formattedPendingRewardsWithDecimals);
         setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
       } catch (error) {
-        console.log('Error:' + error.message);
+        console.log("Error:" + error.message);
         // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
       }
     } else {
-      console.log('No wallet connected');
+      console.log("No wallet connected");
     }
   };
   async function connectToMetaMask() {
@@ -260,10 +260,10 @@ function App() {
     connectToMetaMask();
     getContractData();
   }, [account]);
-    useEffect(() => { 
+  useEffect(() => {
     getContractData();
-console.log("is working");
-    }, [account])
+    console.log("is working");
+  }, [account]);
   return (
     <>
       <div id="wb_Image8" className="img">
@@ -316,9 +316,15 @@ console.log("is working");
           </div>
           <button
             className="btn btnupdates d-flex justify-content-center m-auto mt-3"
-            onClick={isApproved ? handleDepositAmount : handleApprove}
+            onClick={handleApprove}
           >
-            {isApproved ? " DEPOSIT" : "Approve"}
+            Approve
+          </button>
+          <button
+            className="btn btnupdates d-flex justify-content-center m-auto mt-3"
+            onClick={handleDepositAmount}
+          >
+            Deposit
           </button>
           <div className="d-flex justify-content-between align-items-center p-1">
             <span className="usdt">
@@ -327,9 +333,7 @@ console.log("is working");
             <div>
               {" "}
               <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong>
-                  {totalDeposited ? totalDeposited : 0}
-                </strong>
+                <strong>{totalDeposited ? totalDeposited : 0}</strong>
               </span>{" "}
               <span className="usdt">
                 <strong>USDT</strong>
