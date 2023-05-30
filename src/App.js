@@ -76,8 +76,7 @@ function App() {
       const amountInWei = Web3.utils.toWei(usdt.toString(), 'ether');
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const fromAddress = accounts[0];
-
-      await contractInstance.methods.Deposit(amountInWei).send({ from: fromAddress, value: amountInWei });
+      await contractInstance.methods.Deposit(amountInWei).send({ from: fromAddress});
       alert('Deposit successful!');
     } catch (error) {
       alert(error.message);
