@@ -42,6 +42,67 @@ function App() {
 
     return message;
   }
+
+  const getContractData = async () => {
+    // Check if a wallet is connected
+    if (window.ethereum && window.ethereum.selectedAddress) {
+      try {
+        const selectedAddress = window.ethereum.selectedAddress;
+        const web3 = new Web3(window.ethereum);
+        const userTotalClaimWei = await contractInstance.methods
+        .Players(selectedAddress)
+        .call({ from: selectedAddress });
+ console.log(userTotalClaimWei.user_total_claimed);
+        // Your code to interact with the contract using the selectedAddress
+        const totalClaimedWei = userTotalClaimWei.user_total_claimed
+        const pendingRewardsWei = await contractInstance.methods
+          .CalculateClaimable(selectedAddress)
+          .call();
+        const nextClaimTimeEpoch = await contractInstance.methods
+          .NextClaimTime(selectedAddress)
+          .call();
+        const totalAmountDepositedWei = userTotalClaimWei.user_total_invested
+
+        // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
+        const formattedTotalAmountDeposited = web3.utils.fromWei(
+          totalAmountDepositedWei,
+          'ether'
+        );
+        const formattedTotalClaimed = web3.utils.fromWei(
+          totalClaimedWei,
+          'ether'
+        );
+
+        // Convert Wei to normal with 4 decimals for pendingRewards
+        const formattedPendingRewards = web3.utils.fromWei(
+          pendingRewardsWei,
+          'ether'
+        );
+        const formattedPendingRewardsWithDecimals = parseFloat(
+          formattedPendingRewards
+        ).toFixed(4);
+
+        // Convert epoch to countdown format for nextClaimTime
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        const countdown = nextClaimTimeEpoch - currentTimestamp;
+        const days = Math.floor(countdown / (24 * 60 * 60));
+        const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
+        const minutes = Math.floor((countdown % (60 * 60)) / 60);
+
+        setTotalDeposited(formattedTotalAmountDeposited);
+        console.log(formattedTotalAmountDeposited,"datas");
+        setTotalClaimed(formattedTotalClaimed);
+        setPendingRewards(formattedPendingRewardsWithDecimals);
+        console.log(formattedPendingRewardsWithDecimals);
+        setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
+      } catch (error) {
+        console.log('Error:' + error.message);
+        // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
+      }
+    } else {
+      console.log('No wallet connected');
+    }
+  };
   async function connectToMetaMask() {
     try {
       const provider = await detectEthereumProvider();
@@ -61,13 +122,13 @@ function App() {
 
         if (accounts.length > 0) {
           setLastFourDigits(accounts[0].slice(-4));
-          // getContractData();
+          getContractData();
         }
       } else {
         alert("Please download MetaMask to connect to the Ethereum network.");
       }
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }
   async function handleDepositAmount() {
@@ -157,64 +218,6 @@ function App() {
       alert(error.message);
     }
   }
-  // async function getContractData() {
-  //   // Check if a wallet is connected
-  //   if (window.ethereum && window.ethereum.selectedAddress) {
-  //     try {
-  //       const selectedAddress = window.ethereum.selectedAddress;
-
-  //       // Your code to interact with the contract using the selectedAddress
-  //       const totalClaimedWei = await contractInstance.methods
-  //         .TotalClaimed()
-  //         .call({ from: selectedAddress });
-  //       const pendingRewardsWei = await contractInstance.methods
-  //         .CalculateClaimable()
-  //         .call({ from: selectedAddress });
-  //       const nextClaimTimeEpoch = await contractInstance.methods
-  //         .NextClaimTime()
-  //         .call({ from: selectedAddress });
-  //       const totalAmountDepositedWei = await contractInstance.methods
-  //         .TotalInvested()
-  //         .call({ from: selectedAddress });
-
-  //       // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
-  //       const formattedTotalAmountDeposited = Web3.utils.fromWei(
-  //         totalAmountDepositedWei,
-  //         "ether"
-  //       );
-  //       const formattedTotalClaimed = Web3.utils.fromWei(
-  //         totalClaimedWei,
-  //         "ether"
-  //       );
-
-  //       // Convert Wei to normal with 4 decimals for pendingRewards
-  //       const formattedPendingRewards = Web3.utils.fromWei(
-  //         pendingRewardsWei,
-  //         "ether"
-  //       );
-  //       const formattedPendingRewardsWithDecimals = parseFloat(
-  //         formattedPendingRewards
-  //       ).toFixed(4);
-
-  //       // Convert epoch to countdown format for nextClaimTime
-  //       const currentTimestamp = Math.floor(Date.now() / 1000);
-  //       const countdown = nextClaimTimeEpoch - currentTimestamp;
-  //       const days = Math.floor(countdown / (24 * 60 * 60));
-  //       const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
-  //       const minutes = Math.floor((countdown % (60 * 60)) / 60);
-
-  //       setTotalAmountDeposited(formattedTotalAmountDeposited);
-  //       setTotalClaimed(formattedTotalClaimed);
-  //       setPendingRewards(formattedPendingRewardsWithDecimals);
-  //       setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
-  //     } catch (error) {
-  //       console.log("Error:" + error.message);
-  //       // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
-  //     }
-  //   } else {
-  //     console.log("No wallet connected");
-  //   }
-  // }
 
   async function checkApproval() {
     try {
@@ -233,7 +236,7 @@ function App() {
       const isApproved = await contractInstance.methods
         .approve()
         .call({ from: fromAddress }, amountInWei);
-console.log(isApproved);
+      console.log(isApproved);
       if (isApproved) {
         setIsApproved(true);
         alert("User is approved!");
@@ -253,86 +256,20 @@ console.log(isApproved);
     checkApproval();
     // getContractData();
   }, [lastFourDigits]);
-  useEffect(()=>{
-    connectToMetaMask();
-    
-  },[]);
   useEffect(() => {
-    const getContractData = async () => {
-      // Check if a wallet is connected
-      if (window.ethereum && window.ethereum.selectedAddress) {
-        try {
-          const selectedAddress = window.ethereum.selectedAddress;
-          const web3 = new Web3(window.ethereum);
-
-          // Your code to interact with the contract using the selectedAddress
-          const totalClaimedWei = await contractInstance.methods
-            .TotalClaimed()
-            .call({ from: selectedAddress });
-          const pendingRewardsWei = await contractInstance.methods
-            .CalculateClaimable(selectedAddress)
-            .call();
-          const nextClaimTimeEpoch = await contractInstance.methods
-            .NextClaimTime(selectedAddress)
-            .call();
-          const totalAmountDepositedWei = await contractInstance.methods
-            .TotalInvested()
-            .call({ from: selectedAddress });
-
-          // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
-          const formattedTotalAmountDeposited = web3.utils.fromWei(
-            totalAmountDepositedWei,
-            'ether'
-          );
-          const formattedTotalClaimed = web3.utils.fromWei(
-            totalClaimedWei,
-            'ether'
-          );
-
-          // Convert Wei to normal with 4 decimals for pendingRewards
-          const formattedPendingRewards = web3.utils.fromWei(
-            pendingRewardsWei,
-            'ether'
-          );
-          const formattedPendingRewardsWithDecimals = parseFloat(
-            formattedPendingRewards
-          ).toFixed(4);
-
-          // Convert epoch to countdown format for nextClaimTime
-          const currentTimestamp = Math.floor(Date.now() / 1000);
-          const countdown = nextClaimTimeEpoch - currentTimestamp;
-          const days = Math.floor(countdown / (24 * 60 * 60));
-          const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
-          const minutes = Math.floor((countdown % (60 * 60)) / 60);
-
-          setTotalDeposited(formattedTotalAmountDeposited);
-          console.log(formattedTotalAmountDeposited);
-          setTotalClaimed(formattedTotalClaimed);
-          setPendingRewards(formattedPendingRewardsWithDecimals);
-          console.log(formattedPendingRewardsWithDecimals);
-          setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
-        } catch (error) {
-          console.log('Error:' + error.message);
-          // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
-        }
-      } else {
-        console.log('No wallet connected');
-      }
-    };
-
+    connectToMetaMask();
     getContractData();
-  }, []);
+  }, [account]);
+    useEffect(() => { 
+    getContractData();
+console.log("is working");
+    }, [account])
   return (
     <>
       <div id="wb_Image8" className="img">
         <img src={ani} className="Image8" alt="" width="641" height="728" />
       </div>
 
-      <Navbartop
-        lastFourDigits={lastFourDigits}
-        connectToMetaMask={connectToMetaMask}
-        account={account}
-      />
       <div className="d-flex justify-content-between align-items-center px-5 mt-2">
         <div>
           {" "}
