@@ -1,7 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Navbartop from "./component/Navbartop";
-import { Container, Row, Col } from "react-bootstrap";
 import discord from "./images/discord.png";
 import Foot from "./component/Foot";
 import ani from "./images/bg animation.gif";
@@ -9,35 +8,147 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 // Import the contract ABI
 import contractABI from './contractABI.json';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 function App() {
   const [usdt, setUSDT] = useState(100);
   const [contractInstance, setContractInstance] = useState(null);
+  const [totalAmountDeposited, setTotalAmountDeposited] = useState('');
+  const [totalClaimed, setTotalClaimed] = useState('');
+  const [pendingRewards, setPendingRewards] = useState('');
+  const [nextClaimTime, setNextClaimTime] = useState('');
+  const [account, setAccount] = useState('');
+  const [lastFourDigits, setLastFourDigits] = useState('');
+  async function connectToMetaMask() {
+    try {
+      const provider = await detectEthereumProvider();
 
+      if (provider) {
+        await provider.request({ method: 'eth_requestAccounts' });
+        const web3 = new Web3(window.ethereum);
+        const accounts = await web3.eth.getAccounts();
+        setAccount(accounts[0]);
+
+        const contractAddress = '0xa618eb8245e64d4b955e6072dc2c2ac122346716'; // Smart contract address
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+        setContractInstance(contract);
+
+        if (account) {
+          setLastFourDigits(account.slice(-4));
+          getContractData();
+        }
+      } else {
+        alert('Please download MetaMask to connect to the Ethereum network.');
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
   async function handleDepositAmount() {
     try {
       if (!contractInstance) {
-        console.error('Contract instance not initialized');
+        alert('Please connect wallet');
         return;
       }
-  
+
       const amountInWei = Web3.utils.toWei(usdt.toString(), 'ether');
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const fromAddress = accounts[0];
-  
+
       await contractInstance.methods.Deposit(amountInWei).send({ from: fromAddress, value: amountInWei });
       alert('Deposit successful!');
     } catch (error) {
       console.error(error);
-      alert(error);
+      alert(error.message);
     }
   }
+  async function claim() {
+    try {
+      if (!contractInstance) {
+        alert('Please connect wallet');
+        return;
+      }
+
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const fromAddress = accounts[0];
+
+      await contractInstance.methods.Claim().send({ from: fromAddress });
+
+      alert('Claim successful!');
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  }
+
+  async function refund() {
+    try {
+      if (!contractInstance) {
+        alert('Please connect wallet');
+        return;
+      }
+
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const fromAddress = accounts[0];
+
+      await contractInstance.methods.Refund().send({ from: fromAddress });
+
+      alert('Refund successful!');
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  }
+  async function getContractData() {
+    // Check if a wallet is connected
+    if (window.ethereum && window.ethereum.selectedAddress) {
+      try {
+        const selectedAddress = window.ethereum.selectedAddress;
+  
+        // Your code to interact with the contract using the selectedAddress
+        const totalClaimedWei = await contractInstance.methods.TotalClaimed().call({ from: selectedAddress });
+        const pendingRewardsWei = await contractInstance.methods.CalculateClaimable().call({ from: selectedAddress });
+        const nextClaimTimeEpoch = await contractInstance.methods.NextClaimTime().call({ from: selectedAddress });
+        const totalAmountDepositedWei = await contractInstance.methods.TotalInvested().call({ from: selectedAddress });
+  
+        // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
+        const formattedTotalAmountDeposited = Web3.utils.fromWei(totalAmountDepositedWei, 'ether');
+        const formattedTotalClaimed = Web3.utils.fromWei(totalClaimedWei, 'ether');
+  
+        // Convert Wei to normal with 4 decimals for pendingRewards
+        const formattedPendingRewards = Web3.utils.fromWei(pendingRewardsWei, 'ether');
+        const formattedPendingRewardsWithDecimals = parseFloat(formattedPendingRewards).toFixed(4);
+  
+        // Convert epoch to countdown format for nextClaimTime
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        const countdown = nextClaimTimeEpoch - currentTimestamp;
+        const days = Math.floor(countdown / (24 * 60 * 60));
+        const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
+        const minutes = Math.floor((countdown % (60 * 60)) / 60);
+  
+        setTotalAmountDeposited(formattedTotalAmountDeposited);
+        setTotalClaimed(formattedTotalClaimed);
+        setPendingRewards(formattedPendingRewardsWithDecimals);
+        setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
+      } catch (error) {
+        console.log('Error:', error.message);
+        // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
+      }
+    } else {
+      console.log('No wallet connected');
+    }
+  }
+  
+
+  useEffect(() => {
+    getContractData();
+  }, []);
+
   return (
     <>
       <div id="wb_Image8" className="img">
         <img src={ani} className="Image8" alt="" width="641" height="728" />
       </div>
-      <Navbartop setContractInstance={setContractInstance} contractInstance={contractInstance} />
+      <Navbartop lastFourDigits={lastFourDigits} connectToMetaMask={connectToMetaMask} />
       <div className="bg py-4 w-50  d-flex m-auto mt-3">
         <span className="welcome text-center justify-content-center d-flex m-auto">
           Good Morning
@@ -79,7 +190,7 @@ function App() {
             <div>
               {" "}
               <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong>10 000</strong>
+                <strong>{totalAmountDeposited ? totalAmountDeposited : 0}</strong>
               </span>{" "}
               <span className="usdt">
                 <strong>USDT</strong>
@@ -102,14 +213,14 @@ function App() {
             <div>
               {" "}
               <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong style={{ fontSize: "19px" }}>10 000</strong>
+                <strong style={{ fontSize: "19px" }}>{pendingRewards?pendingRewards: '0.0000'}</strong>
               </span>{" "}
               <span className="usdt">
                 <strong>USDT</strong>
               </span>
             </div>
           </div>
-          <button className="btn btnupdates d-flex justify-content-center m-auto mt-3">
+          <button className="btn btnupdates d-flex justify-content-center m-auto mt-3" onClick={claim}>
             CLAIM
           </button>
           <div className="d-flex justify-content-between align-items-center p-1 pb-0">
@@ -119,7 +230,7 @@ function App() {
             <div>
               {" "}
               <span className="usdt">
-                <strong style={{ fontSize: "19px" }}>06 D 23 H 59 M</strong>
+                <strong style={{ fontSize: "19px" }}>{nextClaimTime ? nextClaimTime:'0D 0H 0M'}</strong>
               </span>{" "}
             </div>
           </div>
@@ -130,7 +241,7 @@ function App() {
             <div>
               {" "}
               <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong style={{ fontSize: "19px" }}>420</strong>
+                <strong style={{ fontSize: "19px" }}>{totalClaimed?totalClaimed:0}</strong>
               </span>{" "}
               <span className="usdt">
                 <strong>USDT</strong>
@@ -150,14 +261,14 @@ function App() {
             <div>
               {" "}
               <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong style={{ fontSize: "19px" }}>10 000</strong>
+                <strong style={{ fontSize: "19px" }}>{totalAmountDeposited? totalAmountDeposited:0}</strong>
               </span>{" "}
               <span className="usdt">
                 <strong>USDT</strong>
               </span>
             </div>
           </div>
-          <button className="btn btnupdates d-flex justify-content-center m-auto mt-0">
+          <button className="btn btnupdates d-flex justify-content-center m-auto mt-0" onClick={refund}>
             STOP EVOLVING
           </button>
           <div className="d-flex justify-content-center align-items-center p-1 pb-2">
