@@ -13,7 +13,7 @@ const Navbartop = (props) => {
           <img src={text} />
         </div>
         <span className="connectbutton">
-          <strong onClick={props.connectToMetaMask} >{props.lastFourDigits ? `Connected Account: ****${props.lastFourDigits}` : 'CONNECT WALLET'}</strong>
+          <strong onClick={props.connectToMetaMask} >{props.lastFourDigits ? `Connected: ****${props.lastFourDigits}` : 'CONNECT WALLET'}</strong>
         </span>
       </div>
     </div>
