@@ -4,6 +4,8 @@ import Navbartop from "./component/Navbartop";
 import discord from "./images/discord.png";
 import Foot from "./component/Foot";
 import ani from "./images/bg animation.gif";
+import logo1 from "./images/logo.gif";
+import text from "./images/text.png";
 import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 // Import the contract ABI
@@ -43,24 +45,25 @@ function App() {
       const provider = await detectEthereumProvider();
 
       if (provider) {
-        await provider.request({ method: 'eth_requestAccounts' });
         const web3 = new Web3(window.ethereum);
-        const accounts = await web3.eth.getAccounts();
+
+        // Requesting account access
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         setAccount(accounts[0]);
 
         const contractAddress = '0xa618eb8245e64d4b955e6072dc2c2ac122346716'; // Smart contract address
         const contract = new web3.eth.Contract(contractABI, contractAddress);
         setContractInstance(contract);
 
-        if (account) {
-          setLastFourDigits(account.slice(-4));
+        if (accounts.length > 0) {
+          setLastFourDigits(accounts[0].slice(-4));
           getContractData();
         }
       } else {
         alert('Please download MetaMask to connect to the Ethereum network.');
       }
     } catch (error) {
-     alert(error.message);
+      alert(error.message);
     }
   }
   async function handleDepositAmount() {
@@ -151,23 +154,32 @@ function App() {
         // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
       }
     } else {
-     alert('No wallet connected');
+     console.log('No wallet connected');
     }
   }
   
 
   useEffect(() => {
-    
-
+  
     getContractData();
-  }, []);
+  }, [lastFourDigits]);
 
   return (
     <>
       <div id="wb_Image8" className="img">
         <img src={ani} className="Image8" alt="" width="641" height="728" />
       </div>
-      <Navbartop lastFourDigits={lastFourDigits} connectToMetaMask={connectToMetaMask} />
+      // <Navbartop lastFourDigits={lastFourDigits} connectToMetaMask={connectToMetaMask} account={account} />
+      <div className="d-flex justify-content-between align-items-center px-5 mt-2">
+        <div>
+          {" "}
+          <img src={logo1} />
+          <img src={text} />
+        </div>
+        <span className="connectbutton">
+          <strong onClick={connectToMetaMask} >{lastFourDigits ? `Connected: ****${lastFourDigits}` : 'CONNECT WALLET'}</strong>
+        </span>
+      </div>
       <div className="bg py-4 w-50  d-flex m-auto mt-3">
         <span className="welcome text-center justify-content-center d-flex m-auto">
           {Greeting()}
