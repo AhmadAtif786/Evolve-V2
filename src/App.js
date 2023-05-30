@@ -18,6 +18,26 @@ function App() {
   const [nextClaimTime, setNextClaimTime] = useState('');
   const [account, setAccount] = useState('');
   const [lastFourDigits, setLastFourDigits] = useState('');
+  function Greeting() {
+    const digital = new Date();
+    const hours = digital.getHours();
+  
+    let message;
+  
+    if (hours >= 5 && hours <= 11) {
+      message = <b>Good morning</b>;
+    } else if (hours >= 12 && hours <= 17) {
+      message = <b>Good afternoon</b>;
+    } else if (hours >= 18 && hours <= 21) {
+      message = <b>Good evening</b>;
+    } else if (hours >= 22 && hours <= 23) {
+      message = <b>Glad to see you this time of the night.</b>;
+    } else {
+      message = <b>Wow, thanks for choosing us over sleep!</b>;
+    }
+  
+    return message;
+  }
   async function connectToMetaMask() {
     try {
       const provider = await detectEthereumProvider();
@@ -40,7 +60,7 @@ function App() {
         alert('Please download MetaMask to connect to the Ethereum network.');
       }
     } catch (error) {
-      console.error(error.message);
+     alert(error.message);
     }
   }
   async function handleDepositAmount() {
@@ -57,7 +77,6 @@ function App() {
       await contractInstance.methods.Deposit(amountInWei).send({ from: fromAddress, value: amountInWei });
       alert('Deposit successful!');
     } catch (error) {
-      console.error(error);
       alert(error.message);
     }
   }
@@ -75,7 +94,6 @@ function App() {
 
       alert('Claim successful!');
     } catch (error) {
-      console.error(error);
       alert(error.message);
     }
   }
@@ -94,7 +112,6 @@ function App() {
 
       alert('Refund successful!');
     } catch (error) {
-      console.error(error);
       alert(error.message);
     }
   }
@@ -130,16 +147,18 @@ function App() {
         setPendingRewards(formattedPendingRewardsWithDecimals);
         setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
       } catch (error) {
-        console.log('Error:', error.message);
+       console.log('Error:'+ error.message);
         // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
       }
     } else {
-      console.log('No wallet connected');
+     alert('No wallet connected');
     }
   }
   
 
   useEffect(() => {
+    
+
     getContractData();
   }, []);
 
@@ -151,7 +170,7 @@ function App() {
       <Navbartop lastFourDigits={lastFourDigits} connectToMetaMask={connectToMetaMask} />
       <div className="bg py-4 w-50  d-flex m-auto mt-3">
         <span className="welcome text-center justify-content-center d-flex m-auto">
-          Good Morning
+          {Greeting()}
         </span>
       </div>
 
