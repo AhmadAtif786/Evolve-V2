@@ -32,12 +32,12 @@ code {
 .connectbutton {
   color: #d73cbe;
   font-family: Lastica;
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 2.07px;
   cursor: pointer;
 }
 .bg {
-  background-color: rgba(8, 5, 25, 0.8);
+  background-color: rgba(8, 5, 25, 0.6);
   border-radius: 20px;
 }
 .welcome {
@@ -62,7 +62,7 @@ code {
 }
 #Editbox1 {
   border: 1px solid white;
-  width: 80%;
+  width: 55%;
   border-radius: 4px;
   background-color: transparent;
   background-image: none;
@@ -89,21 +89,23 @@ code {
 .usdtClaim {
   color: #ffffff;
   font-family: Lastica;
-  font-size: 9.3px;
+  font-size: 8px;
   letter-spacing: 2.07px;
   text-align: center;
 }
 .btnupdates {
   background-color: #d73cbe !important;
   border: 1px solid black !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   border-radius: 10px !important;
-  font-weight: bold !important;
+  font-family: Lastica !important;
+  font-weight: bolder !important;
   padding-left: 20px !important;
   padding-right: 20px !important;
+  letter-spacing: 2px !important;
 }
 .foot {
-  position: absolute;
+  /* position: absolute; */
   bottom: 0px;
   width: 100%;
 }
@@ -113,7 +115,7 @@ code {
   justify-content: center;
   align-items: center;
   margin: auto;
-  left: 20%;
+  left: 30%;
   width: 564px;
   height: 641px;
   z-index: -99;
@@ -136,7 +138,13 @@ code {
   display: flex;
   justify-content: space-evenly;
 }
-
+.w50 {
+  width: 50%;
+  margin: auto;
+}
+.last {
+  margin-bottom: 10% !important;
+}
 @media screen and (max-width: 960px) {
   .boxadjust {
     display: block !important;
@@ -148,7 +156,8 @@ code {
     justify-content: center;
     align-items: center;
     margin: auto;
-    left: 20%;
+    left: 31%;
+    top: 36%;
     width: 204px;
     height: 241px;
     z-index: -99;
@@ -160,9 +169,35 @@ code {
     position: unset !important;
     bottom: 0px;
     width: 100%;
-    margin-top: 20px !important;
+    margin-top: 50px !important;
   }
   .adjust {
-    margin-top: 25px;
+    margin-top: 40px;
+  }
+  .w50 {
+    width: unset;
+    margin-left: 50px !important;
+    margin-right: 50px !important;
+  }
+  .welcome {
+    font-size: 16px;
+  }
+  .usdt {
+    font-size: 10px;
+  }
+  .img2 {
+    width: 30%;
+  }
+  .img23 {
+    width: 20% !important;
+  }
+  .img223 {
+    width: 50%;
+  }
+  .connectbutton {
+    font-size: 7px;
+  }
+  .textsm {
+    font-size: 12px;
   }
 }
