@@ -50,9 +50,9 @@ function App() {
         const selectedAddress = window.ethereum.selectedAddress;
         const web3 = new Web3(window.ethereum);
         const userTotalClaimWei = await contractInstance.methods
-        .Players(selectedAddress)
-        .call({ from: selectedAddress });
- console.log(userTotalClaimWei.user_total_claimed);
+          .Players(selectedAddress)
+          .call({ from: selectedAddress });
+        console.log(userTotalClaimWei.user_total_claimed);
         // Your code to interact with the contract using the selectedAddress
         const totalClaimedWei = userTotalClaimWei.user_total_claimed
         const pendingRewardsWei = await contractInstance.methods
@@ -90,7 +90,7 @@ function App() {
         const minutes = Math.floor((countdown % (60 * 60)) / 60);
 
         setTotalDeposited(formattedTotalAmountDeposited);
-        console.log(formattedTotalAmountDeposited,"datas");
+        console.log(formattedTotalAmountDeposited, "datas");
         setTotalClaimed(formattedTotalClaimed);
         setPendingRewards(formattedPendingRewardsWithDecimals);
         console.log(formattedPendingRewardsWithDecimals);
@@ -250,20 +250,20 @@ function App() {
     }
   }
   useEffect(() => {
-    checkApproval();
-  }, [account]);
+    console.log(lastFourDigits);
+  }, [account, contractInstance, lastFourDigits]);
   useEffect(() => {
     checkApproval();
-    // getContractData();
-  }, [lastFourDigits]);
+  }, [account, lastFourDigits]);
+
   useEffect(() => {
     connectToMetaMask();
     getContractData();
-  }, [account]);
-    useEffect(() => { 
+  }, []);
+  useEffect(() => {
     getContractData();
-console.log("is working");
-    }, [account])
+    console.log("is working");
+  }, [account])
   return (
     <>
       <div id="wb_Image8" className="img">
