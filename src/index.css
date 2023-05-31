@@ -173,6 +173,34 @@ code {
 .img223 {
   width: 50%;
 }
+.toast-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgb(4, 55, 4);
+  color: #fefffe;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+.toast-success p {
+  margin: 0;
+}
+
+.toast-error {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgb(161, 9, 9);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+.toast-error p {
+  margin: 0;
+}
+
 @media screen and (max-width: 960px) {
   .firstblockshead {
     font-size: 14px;

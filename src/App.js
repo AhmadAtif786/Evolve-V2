@@ -14,6 +14,8 @@ import tokenABI from "./tokenABI.json";
 import { useState, useEffect } from "react";
 function App() {
   const [usdt, setUSDT] = useState(100);
+  const [success,setSuccess]=useState(null);
+  const [error,setError]=useState(null);
   const [isApproved, setIsApproved] = useState(false);
   const [contractInstance, setContractInstance] = useState(null);
   const [totalDeposited, setTotalDeposited] = useState(0);
@@ -201,7 +203,7 @@ function App() {
           getContractData();
         }
       } else {
-        alert("Please download MetaMask to connect to the Ethereum network.");
+        setError("Please download MetaMask to connect to the Ethereum network.");
       }
     } catch (error) {
       console.log(error.message);
@@ -210,7 +212,7 @@ function App() {
   async function handleDepositAmount() {
     try {
       if (!contractInstance) {
-        alert("Please connect wallet");
+        setError("Please connect wallet");
         return;
       }
 
@@ -223,15 +225,15 @@ function App() {
       await contractInstance.methods
         .Deposit(amountInWei)
         .send({ from: fromAddress });
-      alert("Deposit successful!");
+      setSuccess("Deposit successful!");
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
     }
   }
   async function handleApprove() {
     try {
       if (!contractInstance) {
-        alert("Please connect wallet");
+        setError("Please connect wallet");
         return;
       }
       const web3 = new Web3(window.ethereum);
@@ -249,16 +251,16 @@ function App() {
       await tokenContract.methods
         .approve(contractInstance.options.address, amountInWei)
         .send({ from: fromAddress });
-      alert("Approval successful!");
+      setSuccess("Approval successful!");
       setIsApproved(true);
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
     }
   }
   async function claim() {
     try {
       if (!contractInstance) {
-        alert("Please connect wallet");
+        setError("Please connect wallet");
         return;
       }
 
@@ -269,16 +271,16 @@ function App() {
 
       await contractInstance.methods.Claim().send({ from: fromAddress });
 
-      alert("Claim successful!");
+      setSuccess("Claim successful!");
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
     }
   }
 
   async function refund() {
     try {
       if (!contractInstance) {
-        alert("Please connect wallet");
+        setError("Please connect wallet");
         return;
       }
 
@@ -289,9 +291,9 @@ function App() {
 
       await contractInstance.methods.Refund().send({ from: fromAddress });
 
-      alert("Refund successful!");
+      setSuccess("Refund successful!");
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
     }
   }
 
@@ -315,11 +317,11 @@ function App() {
       console.log(isApproved);
       if (isApproved) {
         setIsApproved(true);
-        alert("User is approved!");
+        setSuccess("User is approved!");
       } else {
         setIsApproved(false);
 
-        alert("User is not approved.");
+        setError("User is not approved.");
       }
     } catch (error) {
       console.log(error.message);
@@ -346,13 +348,44 @@ function App() {
     getContractData();
     console.log("is working");
   }, [account]);
+  
+  useEffect(() => {
+    if (success) {
+      const toastTimeout = setTimeout(() => {
+        setSuccess(null);
+      }, 3000);
+
+      return () => clearTimeout(toastTimeout);
+    }
+  }, [success]);
+
+  useEffect(() => {
+    if (error) {
+      const toastTimeout = setTimeout(() => {
+        setError(null);
+      }, 3000);
+
+      return () => clearTimeout(toastTimeout);
+    }
+  }, [error]);
   return (
     <>
       <div className="max">
+      {success && (
+        <div className="toast-success">
+          <p>{success}</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="toast-error">
+          <p>{error}</p>
+        </div>
+      )}
         {/* <div id="wb_Image8" className="img">
           <img src={ani} className="Image8" alt="" width="641" height="728" />
         </div> */}
-
+       
         <div className="d-flex justify-content-between align-items-center mt-2 bg p-1 py-2 w50 mt-5 px-3">
           <div>
             {" "}
