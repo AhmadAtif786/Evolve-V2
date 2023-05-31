@@ -6,7 +6,9 @@ const Foot = () => {
     <>
       <div className="d-flex justify-content-between align-items-center px-5 mt-2 foot">
         <img className="img2" src={bnb} />
-        <span className="usdtClaim">© 2023 ELEVATE MY CAPITAL</span>
+        <span className="usdtClaim" style={{ fontSize: "8px" }}>
+          ©2023 PEERFINEX
+        </span>
         <img className="img2" src={cog} />
       </div>
     </>
