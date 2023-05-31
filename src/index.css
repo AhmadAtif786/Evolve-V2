@@ -233,4 +233,8 @@ code {
   .textsm {
     font-size: 14px;
   }
+  .px-5 {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+  }
 }

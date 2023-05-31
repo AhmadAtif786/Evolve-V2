@@ -275,9 +275,9 @@ function App() {
   return (
     <>
       <div className="max">
-        <div id="wb_Image8" className="img">
+        {/* <div id="wb_Image8" className="img">
           <img src={ani} className="Image8" alt="" width="641" height="728" />
-        </div>
+        </div> */}
 
         <div className="d-flex justify-content-between align-items-center mt-2 bg p-1 py-2 w50 mt-5 px-3">
           <div>
@@ -293,7 +293,7 @@ function App() {
             </strong>
           </span>
         </div>
-        <div className="bg py-4 px-5  d-flex  w50 mt-4">
+        <div className="bg py-4  px-5  d-flex  w50 mt-4">
           <span className="welcome text-center justify-content-center d-flex m-auto">
             {Greeting()}
           </span>
