@@ -14,7 +14,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #291750 !important;
+  /* background-color: #291750 !important; */
+  background: radial-gradient(#25134d, #09061b);
+  background-position: center center;
+  /* background-repeat: no-repeat; */
+  background-size: cover;
   /* background-image: url("./images/bg\ animation.gif");
   background-image: rotate(90deg);
   transform-origin: 50% 50%; */
@@ -23,14 +27,19 @@ body {
   font-weight: normal;
   font-size: 19px;
   line-height: 1.1875;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
+.max {
+  max-width: 1366px;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 .connectbutton {
-  color: #d73cbe;
+  color: #bf0564;
   font-family: Lastica;
   font-size: 10px;
   letter-spacing: 2.07px;
@@ -62,11 +71,11 @@ code {
 }
 #Editbox1 {
   border: 1px solid white;
-  width: 55%;
-  border-radius: 4px;
+  width: 90%;
+  border-radius: 10px !important;
   background-color: transparent;
   background-image: none;
-  color: #d73cbe;
+  color: #bf0564;
   font-family: Lastica;
   font-weight: bold;
   font-style: normal;
@@ -94,7 +103,7 @@ code {
   text-align: center;
 }
 .btnupdates {
-  background-color: #d73cbe !important;
+  background-color: #bf0564 !important;
   border: 1px solid black !important;
   font-size: 12px !important;
   border-radius: 10px !important;
@@ -124,26 +133,45 @@ code {
   border: 0px solid #000000;
   border-radius: 0px;
   padding: 0;
-  transform: rotate(90deg);
-  transform-origin: 50% 50%;
+  /* transform: rotate(90deg);
+  transform-origin: 50% 50%; */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
 }
 .widthbox {
-  width: 40%;
+  width: 48%;
 }
 .boxadjust {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 .w50 {
-  width: 50%;
+  width: 90%;
   margin: auto;
+}
+.align {
+  margin-bottom: 4px;
+}
+.align2 {
+  margin-bottom: 2px;
+}
+.al {
+  margin-top: 11px;
+}
+.albloc2 {
+  margin: 39px auto !important;
+  margin-bottom: 0px !important;
 }
 .last {
   margin-bottom: 10% !important;
+}
+.minus {
+  margin-top: -7px;
+}
+.img223 {
+  width: 50%;
 }
 @media screen and (max-width: 960px) {
   .boxadjust {
@@ -164,6 +192,8 @@ code {
   }
   .widthbox {
     width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .foot {
     position: unset !important;
@@ -192,7 +222,7 @@ code {
     width: 20% !important;
   }
   .img223 {
-    width: 50%;
+    width: 70%;
   }
   .connectbutton {
     font-size: 7px;

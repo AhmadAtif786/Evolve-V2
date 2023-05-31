@@ -3,9 +3,9 @@ import "./App.css";
 import Navbartop from "./component/Navbartop";
 import discord from "./images/discord.png";
 import Foot from "./component/Foot";
-import ani from "./images/bg animation.gif";
+import ani from "./images/bg_logo.png";
 import logo1 from "./images/logo.gif";
-import text from "./images/text.png";
+import text from "./images/img22.webp";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 // Import the contract ABI
@@ -22,6 +22,7 @@ function App() {
   const [nextClaimTime, setNextClaimTime] = useState("");
   const [account, setAccount] = useState("");
   const [lastFourDigits, setLastFourDigits] = useState("");
+  const [local, setlocal] = useState("");
   function Greeting() {
     const digital = new Date();
     const hours = digital.getHours();
@@ -115,6 +116,7 @@ function App() {
           method: "eth_requestAccounts",
         });
         setAccount(accounts[0]);
+        localStorage.setItem("account", accounts[0]);
 
         const contractAddress = "0xa618eb8245e64d4b955e6072dc2c2ac122346716"; // Smart contract address
         const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -249,15 +251,21 @@ function App() {
       console.log(error.message);
     }
   }
+  function loc() {
+    setlocal(localStorage.getItem("account"));
+  }
   useEffect(() => {
     console.log(lastFourDigits);
   }, [account, contractInstance, lastFourDigits]);
+  // useEffect(() => {
+  //   checkApproval();
+  // }, [account, lastFourDigits]);
   useEffect(() => {
-    checkApproval();
-  }, [account, lastFourDigits]);
+    loc();
+  }, []);
 
   useEffect(() => {
-    connectToMetaMask();
+    // connectToMetaMask();
     getContractData();
   }, [account]);
   useEffect(() => {
@@ -266,189 +274,199 @@ function App() {
   }, [account]);
   return (
     <>
-      <div id="wb_Image8" className="img">
-        <img src={ani} className="Image8" alt="" width="641" height="728" />
-      </div>
+      <div className="max">
+        <div id="wb_Image8" className="img">
+          <img src={ani} className="Image8" alt="" width="641" height="728" />
+        </div>
 
-      <div className="d-flex justify-content-between align-items-center px-5 mt-2">
-        <div>
-          {" "}
-          <img className="img23" src={logo1} />
-          <img className="img223" src={text} />
-        </div>
-        <span className="connectbutton">
-          <strong onClick={connectToMetaMask}>
-            {lastFourDigits
-              ? `Connected: ****${lastFourDigits}`
-              : "CONNECT WALLET"}
-          </strong>
-        </span>
-      </div>
-      <div className="bg py-4 w50  d-flex  mt-3">
-        <span className="welcome text-center justify-content-center d-flex m-auto">
-          {Greeting()}
-        </span>
-      </div>
-      <div className="boxadjust mt-5 px-5">
-        <div className="bg p-2 widthbox">
-          {" "}
-          <span className="firstblockshead">
-            <strong className="text-center textsm justify-content-center d-flex m-auto">
-              DEPOSIT
-            </strong>
-          </span>
-          <div className="d-flex justify-content-center  align-items-center mt-3">
+        <div className="d-flex justify-content-between align-items-center mt-2 bg p-1 w50 mt-5 px-3">
+          <div>
             {" "}
-            <input
-              type="number"
-              id="Editbox1"
-              name="Deposit Box"
-              value={usdt}
-              onChange={(e) => {
-                setUSDT(e.target.value);
-              }}
-              autocomplete="off"
-              spellcheck="false"
-            ></input>
-            <span className="usdt">
-              <strong>USDT</strong>
-            </span>
+            {/* <img className="img23" src={logo1} /> */}
+            <img className="img223" src={text} />
           </div>
-          <button
-            className="btn btnupdates d-flex justify-content-center m-auto mt-3"
-            onClick={handleApprove}
-          >
-            Approve
-          </button>
-          <button
-            className="btn btnupdates d-flex justify-content-center m-auto mt-3"
-            onClick={handleDepositAmount}
-          >
-            Deposit
-          </button>
-          <div className="d-flex justify-content-between align-items-center p-1">
-            <span className="usdt">
-              <strong>YOUR TOTAL DEPOSIT :</strong>
-            </span>
-            <div>
-              {" "}
-              <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong>{totalDeposited ? totalDeposited : 0}</strong>
-              </span>{" "}
-              <span className="usdt">
-                <strong>USDT</strong>
-              </span>
-            </div>
-          </div>
-        </div>
-        {/* </Col>
-          <Col md={6} className="bg "> */}
-        <div className="bg p-2 widthbox adjust ">
-          <span className="firstblockshead">
-            <strong className="text-center textsm justify-content-center d-flex m-auto">
-              REWARDS
+          <span className="connectbutton">
+            <strong onClick={connectToMetaMask}>
+              {lastFourDigits || local?.slice(-4)
+                ? `Connected: ****${lastFourDigits || local?.slice(-4)}`
+                : "CONNECT WALLET"}
             </strong>
           </span>
-          <div className="d-flex justify-content-between align-items-center p-1">
-            <span className="usdt">
-              <strong>PENDING :</strong>
-            </span>
-            <div>
-              {" "}
-              <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong>{pendingRewards ? pendingRewards : "0.0000"}</strong>
-              </span>{" "}
-              <span className="usdt">
-                <strong>USDT</strong>
-              </span>
-            </div>
-          </div>
-          <button
-            className="btn btnupdates d-flex justify-content-center m-auto mt-3"
-            onClick={claim}
-          >
-            CLAIM
-          </button>
-          <div className="d-flex justify-content-between align-items-center p-1 pb-0">
-            <span className="usdt">
-              <strong>YOU CAN CLAIM IN :</strong>
-            </span>
-            <div>
-              {" "}
-              <span className="usdt">
-                <strong>{nextClaimTime ? nextClaimTime : "0D 0H 0M"}</strong>
-              </span>{" "}
-            </div>
-          </div>
-          <div className="d-flex justify-content-between align-items-center px-1">
-            <span className="usdt">
-              <strong>YOUR TOTAL CLAIMS :</strong>
-            </span>
-            <div>
-              {" "}
-              <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong>{totalClaimed ? totalClaimed : 0}</strong>
-              </span>{" "}
-              <span className="usdt">
-                <strong>USDT</strong>
-              </span>
-            </div>
-          </div>
         </div>
-      </div>
-      <div className="boxadjust last mt-5 px-5">
-        <div className="bg p-2 widthbox">
-          <span className="firstblockshead">
-            <strong className="text-center textsm justify-content-center d-flex m-auto">
-              CLAIM TOTAL DEPOSIT
-            </strong>
+        <div className="bg py-4 px-5  d-flex  w50 mt-5">
+          <span className="welcome text-center justify-content-center d-flex m-auto">
+            {Greeting()}
           </span>
-          <div className="d-flex justify-content-center align-items-center p-1">
-            <div>
-              {" "}
-              <span className="usdt" style={{ color: "#d73cbe" }}>
-                <strong style={{ fontSize: "19px" }}>
-                  {totalDeposited ? totalDeposited : 0}
-                </strong>
-              </span>{" "}
-              <span className="usdt">
-                <strong>USDT</strong>
-              </span>
-            </div>
-          </div>
-          <button
-            className="btn btnupdates d-flex justify-content-center m-auto mt-0"
-            onClick={refund}
-          >
-            STOP EVOLVING
-          </button>
-          <div className="d-flex justify-content-center align-items-center p-1 pb-2 mt-2">
-            <span className="usdtClaim">
-              <strong>
-                PLEASE MAKE SURE TO CLAIM YOUR PENDING REWARDS FIRST
+        </div>
+        <div className="boxadjust mt-4 px-5">
+          <div className="bg p-2 widthbox">
+            {" "}
+            <span className="firstblockshead">
+              <strong className="text-center textsm justify-content-center d-flex m-auto">
+                DEPOSIT
               </strong>
             </span>
+            <div
+              className="d-flex justify-content-center  align-items-center mt-3"
+              style={{ flexDirection: "column" }}
+            >
+              {" "}
+              <input
+                type="number"
+                id="Editbox1"
+                name="Deposit Box"
+                value={usdt}
+                onChange={(e) => {
+                  setUSDT(e.target.value);
+                }}
+                autocomplete="off"
+                spellcheck="false"
+              ></input>
+              <div>
+                <span className="usdtClaim">
+                  <strong>BEP-20 USDT</strong>
+                </span>
+              </div>
+            </div>
+            <div className="d-flex justify-content-center">
+              {" "}
+              <button
+                className="btn btnupdates d-flex justify-content-center m-auto mt-3"
+                onClick={handleApprove}
+              >
+                Approve
+              </button>
+              <button
+                className="btn btnupdates d-flex justify-content-center m-auto mt-3"
+                onClick={handleDepositAmount}
+              >
+                Deposit
+              </button>
+            </div>
+            <div className="d-flex justify-content-between align-items-center p-1 al">
+              <span className="usdt">
+                <strong>YOUR TOTAL DEPOSIT :</strong>
+              </span>
+              <div className="align">
+                {" "}
+                <span className="usdt " style={{ color: "#d73cbe" }}>
+                  <strong>{totalDeposited ? totalDeposited : 0}</strong>
+                </span>{" "}
+                <span className="usdt">
+                  <strong>USDT</strong>
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
-        {/* </Col>
-          <Col md={6} className="bg"> */}
-        <div className="bg p-2 widthbox adjust">
-          <span className="firstblockshead">
-            <strong className="text-center textsm justify-content-center d-flex m-auto">
-              NOT SURE WHAT TO DO ?
-            </strong>
-          </span>
-          <div className="d-flex justify-content-center align-items-center p-1">
-            <img src={discord} id="Image9" alt="" width="203" height="52" />
-          </div>
-          <div className="d-flex justify-content-center align-items-center p-1 pb-0">
-            <span className="usdtClaim">
-              <strong>* MAY CONTAIN MEMES.</strong>
+          {/* </Col>
+          <Col md={6} className="bg "> */}
+          <div className="bg p-2 widthbox adjust ">
+            <span className="firstblockshead">
+              <strong className="text-center textsm justify-content-center d-flex m-auto">
+                REWARDS
+              </strong>
             </span>
+            <div className="d-flex justify-content-between align-items-center p-1 mt-3">
+              <span className="usdt">
+                <strong>PENDING :</strong>
+              </span>
+              <div>
+                {" "}
+                <span className="usdt" style={{ color: "#d73cbe" }}>
+                  <strong>{pendingRewards ? pendingRewards : "0.0000"}</strong>
+                </span>{" "}
+                <span className="usdt">
+                  <strong>USDT</strong>
+                </span>
+              </div>
+            </div>
+            <button
+              className="btn btnupdates d-flex justify-content-center albloc2 "
+              onClick={claim}
+            >
+              CLAIM
+            </button>
+            <div className="d-flex justify-content-between align-items-center p-1 pb-0 minus">
+              <span className="usdt">
+                <strong>YOU CAN CLAIM IN :</strong>
+              </span>
+              <div className="align2">
+                {" "}
+                <span className="usdt">
+                  <strong>{nextClaimTime ? nextClaimTime : "0D 0H 0M"}</strong>
+                </span>{" "}
+              </div>
+            </div>
+            <div className="d-flex justify-content-between align-items-center px-1 minus">
+              <span className="usdt">
+                <strong>YOUR TOTAL CLAIMS :</strong>
+              </span>
+              <div className="align2">
+                {" "}
+                <span className="usdt" style={{ color: "#d73cbe" }}>
+                  <strong>{totalClaimed ? totalClaimed : 0}</strong>
+                </span>{" "}
+                <span className="usdt">
+                  <strong>USDT</strong>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
+        <div className="boxadjust last mt-4 px-5">
+          <div className="bg p-2 widthbox">
+            <span className="firstblockshead">
+              <strong className="text-center textsm justify-content-center d-flex m-auto">
+                CLAIM TOTAL DEPOSIT
+              </strong>
+            </span>
+            <div className="d-flex justify-content-center align-items-center p-1">
+              <div>
+                {" "}
+                <span className="usdt" style={{ color: "#d73cbe" }}>
+                  <strong style={{ fontSize: "19px" }}>
+                    {totalDeposited ? totalDeposited : 0}
+                  </strong>
+                </span>{" "}
+                <span className="usdt">
+                  <strong>USDT</strong>
+                </span>
+              </div>
+            </div>
+            <button
+              className="btn btnupdates d-flex justify-content-center m-auto mt-0"
+              onClick={refund}
+            >
+              STOP EVOLVING
+            </button>
+            <div className="d-flex justify-content-center align-items-center p-1 pb-2 mt-2">
+              <span className="usdtClaim">
+                <strong>
+                  PLEASE MAKE SURE TO CLAIM YOUR PENDING REWARDS FIRST
+                </strong>
+              </span>
+            </div>
+          </div>
+          {/* </Col>
+          <Col md={6} className="bg"> */}
+          <div className="bg p-2 widthbox adjust">
+            <span className="firstblockshead">
+              <strong className="text-center textsm justify-content-center d-flex m-auto">
+                NOT SURE WHAT TO DO ?
+              </strong>
+            </span>
+            <div className="d-flex justify-content-center align-items-center p-1">
+              <img src={discord} id="Image9" alt="" width="203" height="52" />
+            </div>
+            <div className="d-flex justify-content-center align-items-center p-1 pb-0 mt-3">
+              <span className="usdtClaim">
+                <strong>* MAY CONTAIN MEMES.</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+        <Foot />
       </div>
-      <Foot />
     </>
   );
 }
