@@ -7,6 +7,10 @@
     url("./fonts/Lastica.svg#Lastica") format("svg"),
     url("./fonts/Lastica.eot") format("embedded-opentype");
 }
+#root {
+  display: flex;
+  width: 90%;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -33,6 +37,8 @@ body {
 }
 .max {
   max-width: 1366px;
+  /* width: 1600px; */
+  width: 100%;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -117,6 +123,7 @@ code {
   /* position: absolute; */
   bottom: 0px;
   width: 100%;
+  margin-bottom: 10px;
 }
 .img {
   position: absolute;
@@ -148,7 +155,7 @@ code {
   justify-content: space-between;
 }
 .w50 {
-  width: 90%;
+  width: 93%;
   margin: auto;
 }
 .align {
@@ -202,6 +209,10 @@ code {
 }
 
 @media screen and (max-width: 960px) {
+  #root {
+    display: unset !important;
+    width: unset !important;
+  }
   .firstblockshead {
     font-size: 14px;
   }
