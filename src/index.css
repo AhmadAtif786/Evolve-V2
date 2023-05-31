@@ -46,7 +46,7 @@ code {
   cursor: pointer;
 }
 .bg {
-  background-color: rgba(8, 5, 25, 0.6);
+  background-color: rgba(8, 5, 25, 0.85);
   border-radius: 20px;
 }
 .welcome {
@@ -71,7 +71,7 @@ code {
 }
 #Editbox1 {
   border: 1px solid white;
-  width: 90%;
+  width: 83%;
   border-radius: 10px !important;
   background-color: transparent;
   background-image: none;

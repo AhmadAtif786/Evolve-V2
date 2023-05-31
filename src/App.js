@@ -5,7 +5,7 @@ import discord from "./images/discord.png";
 import Foot from "./component/Foot";
 import ani from "./images/bg_logo.png";
 import logo1 from "./images/logo.gif";
-import text from "./images/img22.webp";
+import text from "./images/logo.png";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 // Import the contract ABI
@@ -349,7 +349,7 @@ function App() {
               </span>
               <div className="align">
                 {" "}
-                <span className="usdt " style={{ color: "#d73cbe" }}>
+                <span className="usdt " style={{ color: "#BF0564" }}>
                   <strong>{totalDeposited ? totalDeposited : 0}</strong>
                 </span>{" "}
                 <span className="usdt">
@@ -372,7 +372,7 @@ function App() {
               </span>
               <div>
                 {" "}
-                <span className="usdt" style={{ color: "#d73cbe" }}>
+                <span className="usdt" style={{ color: "#BF0564" }}>
                   <strong>{pendingRewards ? pendingRewards : "0.0000"}</strong>
                 </span>{" "}
                 <span className="usdt">
@@ -403,7 +403,7 @@ function App() {
               </span>
               <div className="align2">
                 {" "}
-                <span className="usdt" style={{ color: "#d73cbe" }}>
+                <span className="usdt" style={{ color: "#BF0564" }}>
                   <strong>{totalClaimed ? totalClaimed : 0}</strong>
                 </span>{" "}
                 <span className="usdt">
@@ -423,10 +423,8 @@ function App() {
             <div className="d-flex justify-content-center align-items-center p-1">
               <div>
                 {" "}
-                <span className="usdt" style={{ color: "#d73cbe" }}>
-                  <strong style={{ fontSize: "19px" }}>
-                    {totalDeposited ? totalDeposited : 0}
-                  </strong>
+                <span className="usdt" style={{ color: "#BF0564" }}>
+                  <strong>{totalDeposited ? totalDeposited : 0}</strong>
                 </span>{" "}
                 <span className="usdt">
                   <strong>USDT</strong>
