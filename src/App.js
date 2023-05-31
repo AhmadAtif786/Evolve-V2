@@ -56,46 +56,58 @@ function App() {
         console.log(userTotalClaimWei.user_total_claimed);
         // Your code to interact with the contract using the selectedAddress
         const totalClaimedWei = userTotalClaimWei.user_total_claimed;
-        const pendingRewardsWei = await contractInstance.methods
+        let pendingRewardsWei = await contractInstance.methods
           .CalculateClaimable(selectedAddress)
           .call();
-        const nextClaimTimeEpoch = await contractInstance.methods
+        let nextClaimTimeEpoch = await contractInstance.methods
           .NextClaimTime(selectedAddress)
           .call();
         const totalAmountDepositedWei = userTotalClaimWei.user_total_invested;
-
+  
         // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
         const formattedTotalAmountDeposited = web3.utils.fromWei(
           totalAmountDepositedWei,
           "ether"
         );
-        const formattedTotalClaimed = web3.utils.fromWei(
-          totalClaimedWei,
-          "ether"
-        );
-
-        // Convert Wei to normal with 4 decimals for pendingRewards
-        const formattedPendingRewards = web3.utils.fromWei(
-          pendingRewardsWei,
-          "ether"
-        );
-        const formattedPendingRewardsWithDecimals = parseFloat(
-          formattedPendingRewards
-        ).toFixed(4);
-
-        // Convert epoch to countdown format for nextClaimTime
-        const currentTimestamp = Math.floor(Date.now() / 1000);
-        const countdown = nextClaimTimeEpoch - currentTimestamp;
-        const days = Math.floor(countdown / (24 * 60 * 60));
-        const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
-        const minutes = Math.floor((countdown % (60 * 60)) / 60);
-
-        setTotalDeposited(formattedTotalAmountDeposited);
-        console.log(formattedTotalAmountDeposited, "datas");
-        setTotalClaimed(formattedTotalClaimed);
-        setPendingRewards(formattedPendingRewardsWithDecimals);
-        console.log(formattedPendingRewardsWithDecimals);
-        setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
+        const formattedTotalClaimed = parseInt(web3.utils.fromWei(totalClaimedWei, "ether"));
+  
+        // Update the data initially
+        updateData();
+  
+        // Update the pending rewards every 5 seconds
+        setInterval(async () => {
+          pendingRewardsWei = await contractInstance.methods
+            .CalculateClaimable(selectedAddress)
+            .call();
+          const formattedPendingRewards = web3.utils.fromWei(pendingRewardsWei, "ether");
+          const formattedPendingRewardsWithDecimals = parseFloat(formattedPendingRewards).toFixed(5);
+          updateData(formattedPendingRewardsWithDecimals);
+        }, 5000);
+  
+        // Update the next claim time every 60 seconds
+        setInterval(async () => {
+          nextClaimTimeEpoch = await contractInstance.methods
+            .NextClaimTime(selectedAddress)
+            .call();
+          updateData();
+        }, 60000);
+  
+        function updateData(formattedPendingRewardsWithDecimals) {
+          // Convert epoch to countdown format for nextClaimTime
+          const currentTimestamp = Math.floor(Date.now() / 1000);
+          const countdown = nextClaimTimeEpoch - currentTimestamp;
+          const days = Math.floor(countdown / (24 * 60 * 60));
+          const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
+          const minutes = Math.floor((countdown % (60 * 60)) / 60);
+  
+          setTotalDeposited(formattedTotalAmountDeposited);
+          // console.log(formattedTotalAmountDeposited, "datas");
+          setTotalClaimed(formattedTotalClaimed);
+          setPendingRewards(formattedPendingRewardsWithDecimals);
+          // console.log(formattedPendingRewardsWithDecimals,'5');
+          setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
+          // console.log(nextClaimTime,'60');
+        }
       } catch (error) {
         console.log("Error:" + error.message);
         // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
@@ -104,6 +116,68 @@ function App() {
       console.log("No wallet connected");
     }
   };
+  
+
+  // const getContractData = async () => {
+  //   // Check if a wallet is connected
+  //   if (window.ethereum && window.ethereum.selectedAddress) {
+  //     try {
+  //       const selectedAddress = window.ethereum.selectedAddress;
+  //       const web3 = new Web3(window.ethereum);
+  //       const userTotalClaimWei = await contractInstance.methods
+  //         .Players(selectedAddress)
+  //         .call({ from: selectedAddress });
+  //       console.log(userTotalClaimWei.user_total_claimed);
+  //       // Your code to interact with the contract using the selectedAddress
+  //       const totalClaimedWei = userTotalClaimWei.user_total_claimed;
+  //       const pendingRewardsWei = await contractInstance.methods
+  //         .CalculateClaimable(selectedAddress)
+  //         .call();
+  //       const nextClaimTimeEpoch = await contractInstance.methods
+  //         .NextClaimTime(selectedAddress)
+  //         .call();
+  //       const totalAmountDepositedWei = userTotalClaimWei.user_total_invested;
+
+  //       // Convert Wei to normal without decimals for totalAmountDeposited and totalClaimed
+  //       const formattedTotalAmountDeposited = web3.utils.fromWei(
+  //         totalAmountDepositedWei,
+  //         "ether"
+  //       );
+  //       const formattedTotalClaimed = web3.utils.fromWei(
+  //         totalClaimedWei,
+  //         "ether"
+  //       );
+
+  //       // Convert Wei to normal with 4 decimals for pendingRewards
+  //       const formattedPendingRewards = web3.utils.fromWei(
+  //         pendingRewardsWei,
+  //         "ether"
+  //       );
+  //       const formattedPendingRewardsWithDecimals = parseFloat(
+  //         formattedPendingRewards
+  //       ).toFixed(4);
+
+  //       // Convert epoch to countdown format for nextClaimTime
+  //       const currentTimestamp = Math.floor(Date.now() / 1000);
+  //       const countdown = nextClaimTimeEpoch - currentTimestamp;
+  //       const days = Math.floor(countdown / (24 * 60 * 60));
+  //       const hours = Math.floor((countdown % (24 * 60 * 60)) / (60 * 60));
+  //       const minutes = Math.floor((countdown % (60 * 60)) / 60);
+
+  //       setTotalDeposited(formattedTotalAmountDeposited);
+  //       console.log(formattedTotalAmountDeposited, "datas");
+  //       setTotalClaimed(formattedTotalClaimed);
+  //       setPendingRewards(formattedPendingRewardsWithDecimals);
+  //       console.log(formattedPendingRewardsWithDecimals);
+  //       setNextClaimTime(`${days} D ${hours} H ${minutes} M`);
+  //     } catch (error) {
+  //       console.log("Error:" + error.message);
+  //       // Handle the error appropriately, e.g., display an error message to the user or take corrective actions
+  //     }
+  //   } else {
+  //     console.log("No wallet connected");
+  //   }
+  // };
   async function connectToMetaMask() {
     try {
       const provider = await detectEthereumProvider();
@@ -251,18 +325,18 @@ function App() {
       console.log(error.message);
     }
   }
-  function loc() {
-    setlocal(localStorage.getItem("account"));
-  }
+  // function loc() {
+  //   setlocal(localStorage.getItem("account"));
+  // }
   useEffect(() => {
     console.log(lastFourDigits);
   }, [account, contractInstance, lastFourDigits]);
   // useEffect(() => {
   //   checkApproval();
   // }, [account, lastFourDigits]);
-  useEffect(() => {
-    loc();
-  }, []);
+  // useEffect(() => {
+  //   loc();
+  // }, []);
 
   useEffect(() => {
     // connectToMetaMask();
@@ -287,8 +361,8 @@ function App() {
           </div>
           <span className="connectbutton">
             <strong onClick={connectToMetaMask}>
-              {lastFourDigits || local?.slice(-4)
-                ? `Connected: ****${lastFourDigits || local?.slice(-4)}`
+              {lastFourDigits
+                ? `Connected: ****${lastFourDigits}`
                 : "CONNECT WALLET"}
             </strong>
           </span>
@@ -373,7 +447,7 @@ function App() {
               <div>
                 {" "}
                 <span className="usdt" style={{ color: "#BF0564" }}>
-                  <strong>{pendingRewards ? pendingRewards : "0.0000"}</strong>
+                  <strong>{pendingRewards ? pendingRewards : "0.00000"}</strong>
                 </span>{" "}
                 <span className="usdt">
                   <strong>USDT</strong>
