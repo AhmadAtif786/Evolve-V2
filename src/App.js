@@ -279,7 +279,7 @@ function App() {
           <img src={ani} className="Image8" alt="" width="641" height="728" />
         </div>
 
-        <div className="d-flex justify-content-between align-items-center mt-2 bg p-1 w50 mt-5 px-3">
+        <div className="d-flex justify-content-between align-items-center mt-2 bg p-1 py-2 w50 mt-5 px-3">
           <div>
             {" "}
             {/* <img className="img23" src={logo1} /> */}
@@ -293,13 +293,13 @@ function App() {
             </strong>
           </span>
         </div>
-        <div className="bg py-4 px-5  d-flex  w50 mt-5">
+        <div className="bg py-4 px-5  d-flex  w50 mt-4">
           <span className="welcome text-center justify-content-center d-flex m-auto">
             {Greeting()}
           </span>
         </div>
         <div className="boxadjust mt-4 px-5">
-          <div className="bg p-2 widthbox">
+          <div className="bg py-3 pb-2 p-2 widthbox">
             {" "}
             <span className="firstblockshead">
               <strong className="text-center textsm justify-content-center d-flex m-auto">
@@ -360,7 +360,7 @@ function App() {
           </div>
           {/* </Col>
           <Col md={6} className="bg "> */}
-          <div className="bg p-2 widthbox adjust ">
+          <div className="bg p-2 py-3 pb-2 widthbox adjust ">
             <span className="firstblockshead">
               <strong className="text-center textsm justify-content-center d-flex m-auto">
                 REWARDS
@@ -414,7 +414,7 @@ function App() {
           </div>
         </div>
         <div className="boxadjust last mt-4 px-5">
-          <div className="bg p-2 widthbox">
+          <div className="bg p-2 py-3 pb-2 widthbox">
             <span className="firstblockshead">
               <strong className="text-center textsm justify-content-center d-flex m-auto">
                 CLAIM TOTAL DEPOSIT
@@ -447,7 +447,7 @@ function App() {
           </div>
           {/* </Col>
           <Col md={6} className="bg"> */}
-          <div className="bg p-2 widthbox adjust">
+          <div className="bg p-2  py-3 pb-2 widthbox adjust">
             <span className="firstblockshead">
               <strong className="text-center textsm justify-content-center d-flex m-auto">
                 NOT SURE WHAT TO DO ?
